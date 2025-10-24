@@ -25,36 +25,21 @@ class _SignUpStep2PageState extends State<SignUpStep2Page> {
   }
 
   void _finish(UserProfile base) {
-    if (skills.isEmpty) {
-      _toast('Add at least one skill');
-      return;
-    }
-    if (interests.isEmpty) {
-      _toast('Add at least one interest');
-      return;
-    }
+    if (skills.isEmpty) return _toast('Add at least one skill');
+    if (interests.isEmpty) return _toast('Add at least one interest');
 
     final profile = UserProfile(
       displayName: base.displayName,
       username: base.username,
-      email: base.email, // can be edited later in Profile
+      password: base.password,
+      email: base.email,
       country: base.country,
       bio: base.bio,
       skills: skills,
       interests: interests,
-      githubUrl: '',
-      resumeLabel: null,
     );
 
     final app = AppState();
-    // Simple uniqueness guard for username
-    if (app.registered != null &&
-        app.registered!.username.toLowerCase() ==
-            profile.username.toLowerCase()) {
-      _toast('Username already exists. Please go back and choose another.');
-      return;
-    }
-
     app.register(profile);
     _toast('Account created! You can now log in with your username.');
     Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
@@ -65,112 +50,81 @@ class _SignUpStep2PageState extends State<SignUpStep2Page> {
 
   @override
   Widget build(BuildContext context) {
-    // 🔒 Safe cast: returns null if absent or wrong type
     final args = ModalRoute.of(context)?.settings.arguments;
-    print('Step 2 received arguments: $args');
     final base = args as UserProfile?;
-
-    // If no valid arguments (e.g., hot restart / deep link), go back to Step 1.
     if (base == null) {
-      print('No valid arguments, redirecting to step 1');
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          Navigator.pushReplacementNamed(context, '/signup/step1');
-        }
+        if (mounted) Navigator.pushReplacementNamed(context, '/signup/step1');
       });
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    
-    print('Step 2 loaded with profile: ${base.displayName}');
 
     final t = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create account — Step 2 of 2')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Text('Skills & interests', style: t.titleMedium),
-          const SizedBox(height: 12),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('DevSta',
+                    style: t.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary),
+                    textAlign: TextAlign.center),
+                const SizedBox(height: 24),
+                Text('Step 2 of 2 — Skills & Interests', style: t.headlineSmall),
+                const SizedBox(height: 32),
 
-          // Skills
-          Text('Skills', style: t.titleSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final s in skills)
-                SkillChip(
-                  label: s,
-                  onDeleted: () => setState(() => skills.remove(s)),
+                Text('Skills', style: t.titleMedium),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: skills.map((s) => SkillChip(label: s, onDeleted: () => setState(() => skills.remove(s)))).toList(),
                 ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: AppTextField(controller: skillC, label: 'Add a skill'),
-              ),
-              const SizedBox(width: 8),
-              FilledButton(
-                onPressed: () {
-                  final v = skillC.text.trim();
-                  if (v.isEmpty) return;
-                  setState(() {
-                    skills = [...skills, v];
-                    skillC.clear();
-                  });
-                },
-                child: const Text('Add'),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Interests
-          Text('Interests', style: t.titleSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final s in interests)
-                SkillChip(
-                  label: s,
-                  onDeleted: () => setState(() => interests.remove(s)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: AppTextField(controller: skillC, label: 'Add a skill')),
+                    const SizedBox(width: 8),
+                    FilledButton(onPressed: () {
+                      final v = skillC.text.trim();
+                      if(v.isEmpty) return;
+                      setState((){ skills.add(v); skillC.clear(); });
+                    }, child: const Text('Add')),
+                  ],
                 ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: AppTextField(
-                  controller: interestC,
-                  label: 'Add an interest',
-                ),
-              ),
-              const SizedBox(width: 8),
-              FilledButton(
-                onPressed: () {
-                  final v = interestC.text.trim();
-                  if (v.isEmpty) return;
-                  setState(() {
-                    interests = [...interests, v];
-                    interestC.clear();
-                  });
-                },
-                child: const Text('Add'),
-              ),
-            ],
-          ),
+                const SizedBox(height: 24),
 
-          const SizedBox(height: 24),
-          PrimaryButton(text: 'Create Account', onPressed: () => _finish(base)),
-        ],
+                Text('Interests', style: t.titleMedium),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: interests.map((s) => SkillChip(label: s, onDeleted: () => setState(() => interests.remove(s)))).toList(),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: AppTextField(controller: interestC, label: 'Add an interest')),
+                    const SizedBox(width: 8),
+                    FilledButton(onPressed: () {
+                      final v = interestC.text.trim();
+                      if(v.isEmpty) return;
+                      setState((){ interests.add(v); interestC.clear(); });
+                    }, child: const Text('Add')),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                PrimaryButton(text: 'Create Account', onPressed: () => _finish(base)),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

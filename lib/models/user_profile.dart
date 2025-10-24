@@ -1,17 +1,24 @@
+
 class UserProfile {
   String displayName;
-  String username;          // NEW
+  String username;
+  String password; // <--- added password
   String email;
-  String country;           // NEW
+  String country;
   String bio;
   List<String> skills;
-  List<String> interests;   // NEW
+  List<String> interests;
   String githubUrl;
-  String? resumeLabel; // visual-only
+  String? resumeLabel;
+
+  // Optional extra fields
+  String? phone;
+  String? linkedin;
 
   UserProfile({
     this.displayName = '',
     this.username = '',
+    this.password = '', // <--- initialize password
     this.email = '',
     this.country = '',
     this.bio = '',
@@ -19,5 +26,7 @@ class UserProfile {
     this.interests = const [],
     this.githubUrl = '',
     this.resumeLabel,
+    this.phone,
+    this.linkedin,
   });
 }

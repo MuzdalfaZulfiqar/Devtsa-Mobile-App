@@ -10,8 +10,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final idC = TextEditingController(); // Email or Username
-  final pwdC = TextEditingController(); // still visual-only
+  final idC = TextEditingController();
+  final pwdC = TextEditingController();
 
   @override
   void dispose() {
@@ -28,65 +28,70 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 440),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(Icons.lock_outline, size: 64, color: c.primary),
-                  const SizedBox(height: 16),
-                  Text('Welcome back', style: t.headlineSmall),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Sign in with your email or username',
-                    style: t.bodyMedium,
-                  ),
+                  Text('DevSta',
+                      style: t.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: c.primary),
+                      textAlign: TextAlign.center),
                   const SizedBox(height: 24),
+                  Text('Welcome Back',
+                      style: t.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 8),
+                  Text('Sign in to continue',
+                      style: t.bodyMedium?.copyWith(color: Colors.grey[700]),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 32),
 
                   AppTextField(controller: idC, label: 'Email or Username'),
-                  const SizedBox(height: 12),
-                  AppTextField(
-                    controller: pwdC,
-                    label: 'Password',
-                    obscure: true,
-                  ),
                   const SizedBox(height: 16),
+                  AppTextField(controller: pwdC, label: 'Password', obscure: true),
+                  const SizedBox(height: 24),
 
                   PrimaryButton(
-                    text: 'Continue',
-                    onPressed: () {
-                      final id = idC.text.trim();
-                      if (id.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Enter your email or username'),
-                          ),
-                        );
-                        return;
-                      }
-                      final app = AppState();
-                      if (!app.canLoginWith(id)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'No account found. Please sign up first.',
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-                      app.signInWithIdentifier(id);
-                      Navigator.pushReplacementNamed(context, '/home');
-                    },
-                  ),
-                  const SizedBox(height: 12),
+  text: 'Sign In',
+  onPressed: () {
+    final id = idC.text.trim();
+    final pwd = pwdC.text.trim();
+    final app = AppState();
+    final user = app.registered;
 
-                  TextButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/signup/step1'),
-                    child: const Text("Create an account"),
+    if (user == null || user.username.toLowerCase() != id.toLowerCase()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No account found with that username')),
+      );
+      return; // just return to stop further execution
+    }
+
+    if (user.password != pwd) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Incorrect password')),
+      );
+      return; // stop execution
+    }
+
+    app.signInWithIdentifier(id);
+    Navigator.pushReplacementNamed(context, '/home');
+  },
+),
+
+
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('New here? ', style: TextStyle(color: Colors.grey)),
+                      TextButton(onPressed: () => Navigator.pushNamed(context, '/signup/step1'),
+                        child: const Text('Create an account'),
+                      ),
+                    ],
                   ),
                 ],
               ),
