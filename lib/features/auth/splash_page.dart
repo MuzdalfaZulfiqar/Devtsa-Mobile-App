@@ -8,18 +8,20 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateMixin {
+class _SplashPageState extends State<SplashPage>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _fade = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 600),
+    duration: const Duration(seconds: 2),
   );
 
   @override
   void initState() {
     super.initState();
     _fade.forward();
-    // Keep splash short and sweet
-    Timer(const Duration(milliseconds: 1400), () {
+
+    // Keep splash visible for 2.5 seconds
+    Timer(const Duration(milliseconds: 2500), () {
       final route = AppState().isSignedIn ? '/home' : '/login';
       if (mounted) Navigator.pushReplacementNamed(context, route);
     });
@@ -36,7 +38,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: cs.primary, // #086972 derived tones
+      backgroundColor: cs.primary, // Use primary color
       body: SafeArea(
         child: Center(
           child: FadeTransition(
@@ -44,26 +46,41 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Use assets/logo.png (see pubspec note below)
-                Image.asset(
-                  'assets/logo.png',
-                  height: 150,
-                  width: 150,
-                  errorBuilder: (_, __, ___) => Icon(Icons.description, size: 96, color: cs.onPrimary),
+                // Logo
+                Container(
+                  decoration: BoxDecoration(
+                    color: cs.onPrimary.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: cs.onPrimary.withOpacity(0.2),
+                        blurRadius: 12,
+                        spreadRadius: 4,
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(24),
+                  child: Icon(Icons.description, size: 96, color: cs.onPrimary),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 24),
                 Text(
-                  'Empowering Developers.\nConnecting Innovation.',
+                  'Empowering Developers\nConnecting Innovation',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: cs.onPrimary,
-                        height: 1.25,
+                        fontWeight: FontWeight.bold,
+                        height: 1.3,
                       ),
                 ),
                 const SizedBox(height: 16),
-                CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(cs.onPrimary),
-                  strokeWidth: 2.8,
+                // Optional tagline / progress indicator
+                SizedBox(
+                  height: 4,
+                  width: 120,
+                  child: LinearProgressIndicator(
+                    color: cs.onPrimary,
+                    backgroundColor: cs.onPrimary.withOpacity(0.3),
+                  ),
                 ),
               ],
             ),
