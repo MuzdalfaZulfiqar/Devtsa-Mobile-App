@@ -3,6 +3,7 @@ import '../../widgets/app_text_field.dart';
 import '../../widgets/primary_button.dart';
 import '../../state/app_state.dart';
 import '../../models/user_profile.dart';
+import 'signup_step2_page.dart';
 
 class SignUpStep1Page extends StatefulWidget {
   const SignUpStep1Page({super.key});
@@ -74,10 +75,13 @@ class _SignUpStep1PageState extends State<SignUpStep1Page> {
       email: '', // can be added later in Profile
     );
 
-    Navigator.pushNamed(
+    print('Navigating to step 2 with profile: ${partial.displayName}');
+    Navigator.push(
       context,
-      '/signup/step2',
-      arguments: partial, // <-- fixed
+      MaterialPageRoute(
+        builder: (context) => const SignUpStep2Page(),
+        settings: RouteSettings(arguments: partial),
+      ),
     );
   }
 

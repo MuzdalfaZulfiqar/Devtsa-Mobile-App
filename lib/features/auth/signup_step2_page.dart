@@ -66,10 +66,13 @@ class _SignUpStep2PageState extends State<SignUpStep2Page> {
   @override
   Widget build(BuildContext context) {
     // 🔒 Safe cast: returns null if absent or wrong type
-    final base = ModalRoute.of(context)?.settings.arguments as UserProfile?;
+    final args = ModalRoute.of(context)?.settings.arguments;
+    print('Step 2 received arguments: $args');
+    final base = args as UserProfile?;
 
     // If no valid arguments (e.g., hot restart / deep link), go back to Step 1.
     if (base == null) {
+      print('No valid arguments, redirecting to step 1');
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/signup/step1');
@@ -77,6 +80,8 @@ class _SignUpStep2PageState extends State<SignUpStep2Page> {
       });
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+    
+    print('Step 2 loaded with profile: ${base.displayName}');
 
     final t = Theme.of(context).textTheme;
 
