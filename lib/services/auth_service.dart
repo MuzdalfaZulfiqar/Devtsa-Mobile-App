@@ -7,6 +7,10 @@ class AuthService {
 
   AuthService(this._api);
 
+  // Public getter for _api
+  ApiClient get api => _api;
+
+
   // POST /api/users/signup
   Future<(String token, DevstaUser user)> signup({
     required String name,
