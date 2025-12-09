@@ -54,17 +54,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'Welcome back to DevSta',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Login to access your AI-verified developer identity and connect with the community.',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[700],
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
@@ -84,18 +84,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Text(
                               'Login',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
+                              style: Theme.of(context).textTheme.titleLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'Continue to your DevSta account',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(color: Colors.grey[600]),
                               textAlign: TextAlign.center,
                             ),
@@ -117,7 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 if (email.isEmpty) {
                                   return 'Email is required';
                                 }
-                                final regex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+                                final regex = RegExp(
+                                  r'^[^\s@]+@[^\s@]+\.[^\s@]+$',
+                                );
                                 if (!regex.hasMatch(email)) {
                                   return 'Invalid email format';
                                 }
@@ -138,7 +136,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fillColor: Colors.grey[100],
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                      _obscure ? Icons.visibility_off : Icons.visibility),
+                                    _obscure
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
                                   onPressed: () {
                                     setState(() => _obscure = !_obscure);
                                   },
@@ -166,18 +167,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
 
-                            if (auth.error != null) ...[
-                              const SizedBox(height: 4),
-                              Text(
-                                auth.error!,
-                                style: const TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 12,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-
                             const SizedBox(height: 12),
                             SizedBox(
                               height: 48,
@@ -197,13 +186,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                           strokeWidth: 2,
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
-                                                  Colors.white),
+                                                Colors.white,
+                                              ),
                                         ),
                                       )
                                     : const Text(
                                         'Log In',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          color: Colors.white,
                                         ),
                                       ),
                               ),
@@ -219,7 +210,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    // navigate to SignupScreen (we will implement next step)
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            const OnboardingScreen(),
+                                      ),
+                                    );
                                   },
                                   child: const Text(
                                     'Sign up',
@@ -228,7 +224,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
                           ],
                         ),
                       ),
