@@ -37,57 +37,57 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
         : TemplateB(resume: resume);
 
     return Scaffold(
-  appBar: AppBar(
-    title: const Text('Preview'),
-    actions: [
-      DropdownButton<int>(
-        value: templateIndex,
-        underline: const SizedBox(),
-        items: const [
-          DropdownMenuItem(value: 0, child: Text('Template A')),
-          DropdownMenuItem(value: 1, child: Text('Template B')),
-        ],
-        onChanged: (v) {
-          setState(() => templateIndex = v ?? 0);
-        },
-      ),
-      const SizedBox(width: 8),
-      TextButton(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Export disabled in frontend-only demo.')),
-          );
-        },
-        child: const Text('Export'),
-      ),
-      const SizedBox(width: 12),
-    ],
-  ),
-  body: SingleChildScrollView(
-  child: Center(
-    child: Container(
-      width: 800, // standard resume width
-      margin: const EdgeInsets.symmetric(vertical: 24),
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+      appBar: AppBar(
+        title: const Text('Preview'),
+        actions: [
+          DropdownButton<int>(
+            value: templateIndex,
+            underline: const SizedBox(),
+            items: const [
+              DropdownMenuItem(value: 0, child: Text('Template A')),
+              DropdownMenuItem(value: 1, child: Text('Template B')),
+            ],
+            onChanged: (v) {
+              setState(() => templateIndex = v ?? 0);
+            },
           ),
+          const SizedBox(width: 8),
+          TextButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Export disabled in frontend-only demo.'),
+                ),
+              );
+            },
+            child: const Text(''),
+          ),
+          const SizedBox(width: 12),
         ],
       ),
-      child: templateIndex == 0
-          ? TemplateA(resume: resume)
-          : TemplateB(resume: resume),
-    ),
-  ),
-),
-
-);
-
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            width: 800, // standard resume width
+            margin: const EdgeInsets.symmetric(vertical: 24),
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: templateIndex == 0
+                ? TemplateA(resume: resume)
+                : TemplateB(resume: resume),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -9,7 +9,6 @@ import 'features/resume/resume_edit_page.dart';
 import 'features/resume/resume_preview_page.dart';
 import 'features/profile/public_profile_page.dart';
 import 'features/feed/feed_page.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings s) {
   switch (s.name) {
