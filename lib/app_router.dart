@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'features/auth/splash_page.dart';
-import 'features/auth/signup_onboarding_page.dart';
-import 'features/home/home_page.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 import 'features/profile/profile_page.dart';
 import 'features/resume/resume_edit_page.dart';
 import 'features/resume/resume_preview_page.dart';
 import 'features/profile/public_profile_page.dart';
 import 'features/feed/feed_page.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/auth/login_screen.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings s) {
@@ -19,10 +18,10 @@ Route<dynamic> onGenerateRoute(RouteSettings s) {
     
     /// 👉 New combined signup + onboarding page
     case '/signup':
-      return MaterialPageRoute(builder: (_) => const SignUpOnboardingPage());
-      
-    case '/home':
-      return MaterialPageRoute(builder: (_) => const HomePage());
+      return MaterialPageRoute(builder: (_) => const OnboardingScreen());
+
+    case '/dashboard':
+      return MaterialPageRoute(builder: (_) => const DashboardScreen());
     case '/profile':
       return MaterialPageRoute(builder: (_) => const ProfilePage());
     case '/resume/edit':
