@@ -29,4 +29,43 @@ class UserProfile {
     this.phone,
     this.linkedin,
   });
+
+  // ✅ from backend JSON → UserProfile
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      displayName: json['displayName'] ?? json['name'] ?? '',
+      username: json['username'] ?? '',
+      email: json['email'] ?? '',
+      country: json['country'] ?? '',
+      bio: json['bio'] ?? '',
+      skills: (json['skills'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      interests:
+          (json['interests'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      githubUrl: json['githubUrl'] ?? '',
+      resumeLabel: json['resumeLabel'],
+      phone: json['phone'],
+      linkedin: json['linkedin'],
+    );
+  }
+
+  // ✅ UserProfile → JSON (for signup / update)
+  Map<String, dynamic> toJson() {
+    return {
+      'displayName': displayName,
+      'username': username,
+      'email': email,
+      'country': country,
+      'bio': bio,
+      'skills': skills,
+      'interests': interests,
+      'githubUrl': githubUrl,
+      'resumeLabel': resumeLabel,
+      'phone': phone,
+      'linkedin': linkedin,
+      // sending password only if needed
+      'password': password,
+    };
+  }
 }
+
+
