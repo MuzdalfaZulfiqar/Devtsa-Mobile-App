@@ -332,27 +332,7 @@ class AppState {
 
   List<Post> feed = <Post>[];
 
-  void seedFeed() {
-    feed = <Post>[
-      Post(
-        author: dummyUsers[0],
-        content: 'Just finished my Flutter project!',
-      ),
-      Post(
-        author: dummyUsers[1],
-        content: 'Learning AI is amazing. Any tips?',
-      ),
-      Post(
-        author: dummyUsers[2],
-        content: 'Backend APIs deployed successfully!',
-      ),
-    ].toList(growable: true);
-  }
-
-  void addPost(String content) {
-    feed = List<Post>.from(feed);
-    feed.insert(0, Post(author: profile, content: content));
-  }
+ 
 
   // --------- REAL SESSION FROM BACKEND ---------
 
@@ -368,7 +348,7 @@ class AppState {
     // ✅ tell ApiClient to attach this token on authenticated calls
     ApiClient().setAuthToken(token);
 
-    seedFeed(); // later you can replace with real feed from backend
+    
   }
 
   /// Helper: build a UserProfile from backend "user" JSON and store session.
@@ -425,7 +405,7 @@ class AppState {
       profile = registered!;
     }
     isSignedIn = true;
-    seedFeed();
+  
   }
 
   void signOut() {

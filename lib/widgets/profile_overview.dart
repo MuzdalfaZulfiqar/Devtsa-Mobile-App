@@ -3,7 +3,6 @@ import '../services/auth_service.dart';
 import '../models/user.dart';
 import '../services/api_client.dart';
 import 'package:url_launcher/url_launcher.dart';
-import './ResumeViewer.dart';
 
 class ProfileOverview extends StatefulWidget {
   final String token;
@@ -41,13 +40,6 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       debugPrint("Failed to fetch user: $e");
     }
   }
-
-  // void _viewResume() async {
-  //   if (user?.resumeUrl != null && await canLaunchUrl(Uri.parse(user!.resumeUrl!))) {
-  //     await launchUrl(Uri.parse(user!.resumeUrl!), mode: LaunchMode.externalApplication);
-  //   }
-  // }
-
 
   @override
   Widget build(BuildContext context) {
