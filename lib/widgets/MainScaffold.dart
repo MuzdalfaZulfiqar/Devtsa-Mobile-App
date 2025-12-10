@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_providers.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import './profile_overview.dart';
+import '../screens/community_screen.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
@@ -25,11 +26,11 @@ class _MainScaffoldState extends State<MainScaffold> {
     // Screens list must now be dynamic
     final List<Widget> screens = [
       const DashboardScreen(),
-      ProfileOverview(token: token),
-      const Center(child: Text("Community Page (Coming Soon)")),
+      ProfileOverview(token: token), // ✅ Pass token
+      const CommunityScreen(),
     ];
 
-    final List<String> titles = ["Dashboard", "Profile", "Community"];
+    final List<String> titles = ["Dashboard", "Profile", "Resume", "Community"];
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -58,7 +59,6 @@ class _MainScaffoldState extends State<MainScaffold> {
             icon: Icon(Icons.person_outline),
             label: 'Profile',
           ),
-          
           BottomNavigationBarItem(
             icon: Icon(Icons.group_outlined),
             label: 'Community',
