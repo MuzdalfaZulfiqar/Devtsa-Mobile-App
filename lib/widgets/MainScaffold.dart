@@ -136,10 +136,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             icon: Icon(Icons.person_outline),
             label: 'Profile',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.description_outlined),
-            label: 'Resume',
-          ),
+          
           BottomNavigationBarItem(
             icon: Icon(Icons.group_outlined),
             label: 'Community',
