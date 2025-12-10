@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+import '../screens/dashboard/dashboard_screen.dart';
+// import other screens when ready
+// import 'features/profile/profile_page.dart';
+// import 'features/resume/resume_edit_page.dart';
+// import 'features/community/community_page.dart'; // placeholder
+
+class MainScaffold extends StatefulWidget {
+  const MainScaffold({super.key});
+
+  @override
+  State<MainScaffold> createState() => _MainScaffoldState();
+}
+
+class _MainScaffoldState extends State<MainScaffold> {
+  int _currentIndex = 0;
+
+  // List of screens for the bottom navigation
+  final List<Widget> _screens = [
+    const DashboardScreen(), // Dashboard
+    Center(child: Text("Profile Page (Coming Soon)")), // Profile placeholder
+    Center(child: Text("Resume Page (Coming Soon)")), // Resume placeholder
+    Center(child: Text("Community Page (Coming Soon)")), // Community placeholder
+  ];
+
+  // Titles for AppBar
+  final List<String> _titles = [
+    "Dashboard",
+    "Profile",
+    "Resume",
+    "Community",
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
+      appBar: AppBar(
+        title: Text(
+          _titles[_currentIndex],
+          style: theme.appBarTheme.titleTextStyle,
+        ),
+        elevation: 0,
+        backgroundColor: theme.colorScheme.surface,
+      ),
+      body: _screens[_currentIndex],
+      
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: theme.colorScheme.primary,
+        unselectedItemColor: theme.colorScheme.onSurfaceVariant,
+        showUnselectedLabels: true,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard_outlined),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.description_outlined),
+            label: 'Resume',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group_outlined),
+            label: 'Community',
+          ),
+        ],
+      ),
+    );
+  }
+}

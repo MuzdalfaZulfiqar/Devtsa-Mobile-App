@@ -88,8 +88,6 @@
 //   }
 // }
 
-
-// lib/providers/auth_provider.dart
 import 'package:flutter/foundation.dart';
 import '../models/user.dart';
 import '../repositories/auth_repository.dart';
@@ -112,7 +110,6 @@ class AuthProvider extends ChangeNotifier {
   bool get loading => _loading;
   String? get error => _error;
 
-  /// Initial setup: load token and current user
   Future<void> init() async {
     _initializing = true;
     notifyListeners();
@@ -136,7 +133,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  /// Fetch the latest user data
   Future<void> fetchCurrentUser() async {
     if (_token == null) return;
     _loading = true;
@@ -144,6 +140,27 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       _user = await _repo.fetchCurrentUser(_token!);
+    } catch (e) {
+      _error = e.toString();
+      rethrow;
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> validateSkills() async {
+    if (_token == null || _user == null) return;
+    _loading = true;
+    notifyListeners();
+
+    try {
+      final data = await _repo.validateSkills(_token!);
+      _user = _user!.copyWith(
+        validatedSkills: data['validated_skills'],
+        profileScore: data['profile_score'],
+        skillsValidated: true,
+      );
     } catch (e) {
       _error = e.toString();
       rethrow;
@@ -198,4 +215,39 @@ class AuthProvider extends ChangeNotifier {
     await _repo.clearToken();
     notifyListeners();
   }
+
+  /// NEW METHOD – Add this inside your AuthProvider class
+Future<void> loginWithToken(String token) async {
+  if (token.isEmpty) {
+    _error = "Invalid token received";
+    notifyListeners();
+    return;
+  }
+
+  _loading = true;
+  _error = null;
+  notifyListeners();
+
+  try {
+    // Save token first
+    await _repo.saveToken(token);
+    _token = token;
+
+    // Fetch fresh user data using the new token
+    _user = await _repo.fetchCurrentUser(token);
+
+    // Success!
+    notifyListeners();
+  } catch (e) {
+    _error = "Failed to login with GitHub: ${e.toString()}";
+    _token = null;
+    _user = null;
+    await _repo.clearToken();
+    print("GitHub OAuth login failed: $e");
+  } finally {
+    _loading = false;
+    notifyListeners();
+  }
 }
+}
+

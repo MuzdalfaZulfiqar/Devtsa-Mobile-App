@@ -1,9 +1,11 @@
 // lib/screens/onboarding/onboarding_screen.dart
 import 'dart:convert';
 
+import 'package:devsta_mobileapp/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../config/backend_config.dart';
 import '../../services/auth_api.dart';
@@ -255,7 +257,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       // 4) Save onboarding (complete=true)
       await OnboardingApi().saveOnboarding(onboarding, complete: true);
-
+// refresh user from backend
+await Provider.of<AuthProvider>(context, listen: false).fetchCurrentUser();
       if (mounted) {
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/dashboard', (r) => false);

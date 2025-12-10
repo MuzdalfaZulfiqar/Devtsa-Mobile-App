@@ -1,29 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class GitHubCard extends StatelessWidget {
-//   final String username;
-//   final int contributions;
-
-//   const GitHubCard({
-//     super.key,
-//     required this.username,
-//     required this.contributions,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       elevation: 3,
-//       margin: const EdgeInsets.symmetric(vertical: 8),
-//       child: ListTile(
-//         leading: const Icon(Icons.code),
-//         title: Text(username),
-//         subtitle: Text('$contributions contributions this year'),
-//         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-//       ),
-//     );
-//   }
-// }
 
 import 'package:flutter/material.dart';
 

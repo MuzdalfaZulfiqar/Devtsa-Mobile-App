@@ -137,4 +137,6 @@ class DevstaUser {
       isBlocked: json['isBlocked'] == true,
     );
   }
+
+  DevstaUser? copyWith({required validatedSkills, required profileScore, required bool skillsValidated}) {}
 }

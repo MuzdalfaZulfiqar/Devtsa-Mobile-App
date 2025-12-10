@@ -8,6 +8,7 @@ import 'features/profile/public_profile_page.dart';
 import 'features/feed/feed_page.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/auth/login_screen.dart';
+import 'widgets/MainScaffold.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings s) {
   switch (s.name) {
@@ -20,8 +21,12 @@ Route<dynamic> onGenerateRoute(RouteSettings s) {
     case '/signup':
       return MaterialPageRoute(builder: (_) => const OnboardingScreen());
 
+    // case '/dashboard':
+    //   return MaterialPageRoute(builder: (_) => const DashboardScreen());
+
     case '/dashboard':
-      return MaterialPageRoute(builder: (_) => const DashboardScreen());
+  return MaterialPageRoute(builder: (_) => const MainScaffold());
+
     case '/profile':
       return MaterialPageRoute(builder: (_) => const ProfilePage());
     case '/resume/edit':

@@ -1,9 +1,9 @@
 // import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
-
 // import '../../providers/auth_providers.dart';
 // import '../../widgets/dashboard_card.dart';
-// import '../../widgets/github_card.dart';
+// import '../../widgets/github_connect_modal.dart';
+// import '../../widgets/resume_upload_modal.dart';
 // import '../../widgets/validated_skills_card.dart';
 // import '../../widgets/info_modal.dart';
 
@@ -15,12 +15,14 @@
 // }
 
 // class _DashboardScreenState extends State<DashboardScreen> {
+//   bool openGithubModal = false;
+//   bool openResumeModal = false;
 //   bool showInfoModal = false;
 //   String infoTitle = '';
 //   String infoMessage = '';
 
 //   void openInfo(String title, String message) {
-//     if (!mounted) return; // avoid calling setState on disposed widget
+//     if (!mounted) return;
 //     setState(() {
 //       infoTitle = title;
 //       infoMessage = message;
@@ -30,57 +32,58 @@
 
 //   void closeInfo() {
 //     if (!mounted) return;
-//     setState(() {
-//       showInfoModal = false;
-//     });
+//     setState(() => showInfoModal = false);
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
 //     final authProvider = Provider.of<AuthProvider>(context);
 //     final user = authProvider.user;
 
-//     // Always wrap loading or empty states in Scaffold
 //     if (authProvider.initializing || authProvider.loading) {
-//       return const Scaffold(
-//         body: Center(child: CircularProgressIndicator()),
+//       return Center(
+//         child: CircularProgressIndicator(color: theme.colorScheme.primary),
 //       );
 //     }
 
 //     if (user == null) {
-//       return const Scaffold(
-//         body: Center(child: Text("No user data available.")),
+//       return Center(
+//         child: Text(
+//           "No user data available.",
+//           style: theme.textTheme.bodyLarge?.copyWith(
+//             color: theme.colorScheme.onSurfaceVariant,
+//           ),
+//         ),
 //       );
 //     }
 
 //     final validatedSkillsList = user.validatedSkills?.keys.toList() ?? [];
 
-//     // To-Do Cards
 //     final List<Map<String, dynamic>> todoCards = [
 //       if (!user.githubConnected)
 //         {
 //           "title": "Connect GitHub",
 //           "subtitle": "Connect your GitHub account to see contributions",
-//           "action": () =>
-//               openInfo("GitHub Connect", "This will open GitHub authorization"),
+//           "action": () => setState(() => openGithubModal = true),
 //         },
 //       if ((user.resumeUrl ?? '').isEmpty)
 //         {
 //           "title": "Upload Resume",
 //           "subtitle": "Upload your resume to improve job matches",
-//           "action": () =>
-//               openInfo("Resume Upload", "This will open resume upload modal"),
+//           "action": () => setState(() => openResumeModal = true),
 //         },
 //       if (!user.skillsValidated)
 //         {
 //           "title": "Validate Skills",
 //           "subtitle": "Validate your skills to unlock achievements",
-//           "action": () =>
-//               openInfo("Validate Skills", "This will trigger skill validation"),
+//           "action": () => openInfo(
+//                 "Validate Skills",
+//                 "Skill validation process will be added soon.",
+//               ),
 //         },
 //     ];
 
-//     // Completed / Achievements Cards
 //     final List<Map<String, dynamic>> completedCards = [
 //       if (user.skillsValidated)
 //         {
@@ -99,79 +102,109 @@
 //         },
 //     ];
 
-//     return Scaffold(
-//       appBar: AppBar(title: const Text("Dashboard")),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               "Welcome, ${user.name ?? 'Developer'}!",
-//               style: Theme.of(context).textTheme.headlineSmall,
-//             ),
-//             const SizedBox(height: 16),
-
-//             // To-Do Cards
-//             if (todoCards.isNotEmpty)
-//               Column(
-//                 children: todoCards
-//                     .map((card) => DashboardCard(
-//                           title: card['title'],
-//                           subtitle: card['subtitle'],
-//                           onTap: card['action'],
-//                         ))
-//                     .toList(),
+//     return Stack(
+//       children: [
+//         SingleChildScrollView(
+//           padding: const EdgeInsets.all(20),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Text(
+//                 "Welcome, ${user.name ?? 'Developer'}!",
+//                 style: theme.textTheme.headlineSmall?.copyWith(
+//                   color: theme.colorScheme.primary,
+//                 ),
 //               ),
+//               const SizedBox(height: 20),
 
-//             const SizedBox(height: 16),
+//               if (todoCards.isNotEmpty)
+//                 Column(
+//                   children: todoCards.map((card) {
+//                     return Padding(
+//                       padding: const EdgeInsets.symmetric(vertical: 6),
+//                       child: DashboardCard(
+//                         title: card['title'],
+//                         subtitle: card['subtitle'],
+//                         onTap: card['action'],
+//                         backgroundColor: theme.colorScheme.secondaryContainer,
+//                         titleColor: theme.colorScheme.onSecondaryContainer,
+//                         subtitleColor: theme.colorScheme.onSecondaryContainer
+//                             .withOpacity(0.8),
+//                       ),
+//                     );
+//                   }).toList(),
+//                 ),
 
-//             // Completed / Achievements
-//             if (completedCards.isNotEmpty)
-//               Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text("Achievements",
-//                       style: Theme.of(context).textTheme.titleMedium),
-//                   const SizedBox(height: 8),
-//                   Column(
-//                     children: completedCards
-//                         .map((card) => DashboardCard(
-//                               title: card['title'],
-//                               subtitle: card['subtitle'],
-//                               isCompleted: true,
-//                             ))
-//                         .toList(),
-//                   ),
-//                 ],
-//               ),
+//               const SizedBox(height: 24),
 
-//             const SizedBox(height: 16),
+//               if (completedCards.isNotEmpty)
+//                 Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       "Achievements",
+//                       style: theme.textTheme.titleMedium?.copyWith(
+//                         color: theme.colorScheme.primary,
+//                         fontWeight: FontWeight.w600,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 10),
+//                     Column(
+//                       children: completedCards.map((card) {
+//                         return Padding(
+//                           padding: const EdgeInsets.symmetric(vertical: 6),
+//                           child: DashboardCard(
+//                             title: card['title'],
+//                             subtitle: card['subtitle'],
+//                             isCompleted: true,
+//                             backgroundColor:
+//                                 theme.colorScheme.surfaceVariant,
+//                             titleColor:
+//                                 theme.colorScheme.onSurfaceVariant,
+//                             subtitleColor: theme.colorScheme.onSurfaceVariant
+//                                 .withOpacity(0.7),
+//                           ),
+//                         );
+//                       }).toList(),
+//                     ),
+//                   ],
+//                 ),
 
-//             // GitHub Card
-//             if (user.githubConnected)
-//               GitHubCard(
-//                 username: user.githubProfile?['login'] ?? '',
-//                 contributions: user.githubStats?['totalRepos'] ?? 0,
-//               ),
+//               const SizedBox(height: 24),
 
-//             const SizedBox(height: 16),
+//               if (user.githubConnected)
+//                 GitHubConnectModal(
+//                   open: false,
+//                   onClose: () {},
+//                 ),
 
-//             // Validated Skills
-//             if (user.skillsValidated || validatedSkillsList.isNotEmpty)
-//               ValidatedSkillsCard(skills: validatedSkillsList),
-//           ],
+//               const SizedBox(height: 24),
+
+//               if (user.skillsValidated || validatedSkillsList.isNotEmpty)
+//                 ValidatedSkillsCard(skills: validatedSkillsList),
+//             ],
+//           ),
 //         ),
-//       ),
 
-//       // Info Modal
-//       floatingActionButton: showInfoModal
-//           ? InfoModal(
-//               title: infoTitle,
-//               message: infoMessage,
-//               onClose: closeInfo,
-//             )
-//           : null,
+//       if (openResumeModal)
+//   ResumeUploadModal(
+//     open: true,
+//     onClose: () => setState(() => openResumeModal = false),
+//   ),
+
+// if (openGithubModal)
+//   GitHubConnectModal(
+//     open: true,
+//     onClose: () => setState(() => openGithubModal = false),
+//   ),
+
+//         if (showInfoModal)
+//           InfoModal(
+//             title: infoTitle,
+//             message: infoMessage,
+//             onClose: closeInfo,
+//           ),
+//       ],
 //     );
 //   }
 // }
@@ -179,10 +212,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../providers/auth_providers.dart';
 import '../../widgets/dashboard_card.dart';
-import '../../widgets/github_card.dart';
+import '../../widgets/github_connect_modal.dart';
+import '../../widgets/resume_upload_modal.dart';
 import '../../widgets/validated_skills_card.dart';
 import '../../widgets/info_modal.dart';
 
@@ -194,6 +227,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  bool openGithubModal = false;
+  bool openResumeModal = false;
   bool showInfoModal = false;
   String infoTitle = '';
   String infoMessage = '';
@@ -209,9 +244,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void closeInfo() {
     if (!mounted) return;
-    setState(() {
-      showInfoModal = false;
-    });
+    setState(() => showInfoModal = false);
+  }
+
+  void runValidation() async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+
+    // Require at least 2 sources: GitHub connected, resume uploaded, or previously validated skills
+    final sourcesCount = [
+      auth.user?.githubConnected ?? false,
+      (auth.user?.resumeUrl ?? '').isNotEmpty,
+      auth.user?.skillsValidated ?? false,
+    ].where((x) => x).length;
+
+    if (sourcesCount < 2) {
+      openInfo(
+          "Add More Sources",
+          "Please connect GitHub or upload your resume before running skill validation.");
+      return;
+    }
+
+    try {
+      await auth.validateSkills();
+      openInfo("Skills Validated", "Your profile score and skills are updated.");
+    } catch (e) {
+      openInfo("Validation Failed", e.toString());
+    }
   }
 
   @override
@@ -220,59 +278,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.user;
 
-    // Loading state
     if (authProvider.initializing || authProvider.loading) {
-      return Scaffold(
-        backgroundColor: theme.colorScheme.surface,
-        body: Center(
-          child: CircularProgressIndicator(
-            color: theme.colorScheme.primary,
-          ),
-        ),
+      return Center(
+        child: CircularProgressIndicator(color: theme.colorScheme.primary),
       );
     }
 
-    // No user
     if (user == null) {
-      return Scaffold(
-        backgroundColor: theme.colorScheme.surface,
-        body: Center(
-          child: Text(
-            "No user data available.",
-            style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-          ),
+      return Center(
+        child: Text(
+          "No user data available.",
+          style: theme.textTheme.bodyLarge
+              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
       );
     }
 
-    final validatedSkillsList = user.validatedSkills?.keys.toList() ?? [];
+    final validatedSkills = user.validatedSkills ?? {};
 
-    // To-Do Cards
     final List<Map<String, dynamic>> todoCards = [
       if (!user.githubConnected)
         {
           "title": "Connect GitHub",
           "subtitle": "Connect your GitHub account to see contributions",
-          "action": () =>
-              openInfo("GitHub Connect", "This will open GitHub authorization"),
+          "action": () => setState(() => openGithubModal = true),
         },
       if ((user.resumeUrl ?? '').isEmpty)
         {
           "title": "Upload Resume",
           "subtitle": "Upload your resume to improve job matches",
-          "action": () =>
-              openInfo("Resume Upload", "This will open resume upload modal"),
+          "action": () => setState(() => openResumeModal = true),
         },
       if (!user.skillsValidated)
         {
           "title": "Validate Skills",
           "subtitle": "Validate your skills to unlock achievements",
-          "action": () =>
-              openInfo("Validate Skills", "This will trigger skill validation"),
+          "action": runValidation,
         },
     ];
 
-    // Completed / Achievements Cards
     final List<Map<String, dynamic>> completedCards = [
       if (user.skillsValidated)
         {
@@ -291,104 +335,115 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
     ];
 
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      appBar: AppBar(
-        title: Text("Dashboard", style: theme.appBarTheme.titleTextStyle),
-        elevation: 0,
-        backgroundColor: theme.colorScheme.surface,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome message
-            Text(
-              "Welcome, ${user.name ?? 'Developer'}!",
-              style: theme.textTheme.headlineSmall?.copyWith(
-                color: theme.colorScheme.primary,
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Welcome, ${user.name ?? 'Developer'}!",
+                style: theme.textTheme.headlineSmall
+                    ?.copyWith(color: theme.colorScheme.primary),
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // To-Do Cards
-            if (todoCards.isNotEmpty)
-              Column(
-                children: todoCards
-                    .map((card) => Padding(
+              // TODO Cards
+              if (todoCards.isNotEmpty)
+                Column(
+                  children: todoCards.map((card) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: DashboardCard(
+                        title: card['title'],
+                        subtitle: card['subtitle'],
+                        onTap: card['action'],
+                        backgroundColor: theme.colorScheme.secondaryContainer,
+                        titleColor: theme.colorScheme.onSecondaryContainer,
+                        subtitleColor: theme.colorScheme.onSecondaryContainer
+                            .withOpacity(0.8),
+                      ),
+                    );
+                  }).toList(),
+                ),
+
+              const SizedBox(height: 24),
+
+              // Achievements
+              if (completedCards.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Achievements",
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Column(
+                      children: completedCards.map((card) {
+                        return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: DashboardCard(
                             title: card['title'],
                             subtitle: card['subtitle'],
-                            onTap: card['action'],
-                            backgroundColor: theme.colorScheme.secondaryContainer,
-                            titleColor: theme.colorScheme.onSecondaryContainer,
-                            subtitleColor: theme.colorScheme.onSecondaryContainer.withOpacity(0.8),
+                            isCompleted: true,
+                            backgroundColor: theme.colorScheme.surfaceVariant,
+                            titleColor: theme.colorScheme.onSurfaceVariant,
+                            subtitleColor: theme.colorScheme.onSurfaceVariant
+                                .withOpacity(0.7),
                           ),
-                        ))
-                    .toList(),
-              ),
-
-            const SizedBox(height: 24),
-
-            // Completed / Achievements
-            if (completedCards.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Achievements",
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
+                        );
+                      }).toList(),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Column(
-                    children: completedCards
-                        .map((card) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: DashboardCard(
-                                title: card['title'],
-                                subtitle: card['subtitle'],
-                                isCompleted: true,
-                                backgroundColor: theme.colorScheme.surfaceVariant,
-                                titleColor: theme.colorScheme.onSurfaceVariant,
-                                subtitleColor: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
-                              ),
-                            ))
-                        .toList(),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // GitHub Card
-            if (user.githubConnected)
-              GitHubCard(
-                username: user.githubProfile?['login'] ?? '',
-                contributions: user.githubStats?['totalRepos'] ?? 0,
-              ),
+              // GitHub Modal (hidden version for example)
+              if (user.githubConnected)
+                GitHubConnectModal(open: false, onClose: () {}),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Validated Skills
-            if (user.skillsValidated || validatedSkillsList.isNotEmpty)
-              ValidatedSkillsCard(skills: validatedSkillsList),
-          ],
+              // Validated Skills
+              if (user.skillsValidated || validatedSkills.isNotEmpty)
+                ValidatedSkillsCard(
+                  validatedSkills: validatedSkills,
+                  profileScore: user.profileScore ?? 0,
+                  isValidating: authProvider.loading,
+                  onValidate: runValidation,
+                ),
+            ],
+          ),
         ),
-      ),
 
-      // Info Modal
-      floatingActionButton: showInfoModal
-          ? InfoModal(
-              title: infoTitle,
-              message: infoMessage,
-              onClose: closeInfo,
-            )
-          : null,
+        // Resume Modal
+        if (openResumeModal)
+          ResumeUploadModal(
+            open: true,
+            onClose: () => setState(() => openResumeModal = false),
+          ),
+
+        // GitHub Modal
+        if (openGithubModal)
+          GitHubConnectModal(
+            open: true,
+            onClose: () => setState(() => openGithubModal = false),
+          ),
+
+        // Info Modal
+        if (showInfoModal)
+          InfoModal(
+            title: infoTitle,
+            message: infoMessage,
+            onClose: closeInfo,
+          ),
+      ],
     );
   }
 }

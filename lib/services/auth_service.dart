@@ -70,4 +70,17 @@ class AuthService {
     final userJson = (data['user'] ?? data) as Map<String, dynamic>;
     return DevstaUser.fromJson(userJson);
   }
+
+   Future<Map<String, dynamic>> validateSkills(String token) async {
+    final data = await _api.postJson(
+      '/api/users/validate-skills', // endpoint on your backend
+      token: token,
+    );
+
+    // Expect backend returns: { validated_skills: {...}, profile_score: 85 }
+    return {
+      'validated_skills': data['validated_skills'] ?? {},
+      'profile_score': data['profile_score'] ?? 0,
+    };
+  }
 }
