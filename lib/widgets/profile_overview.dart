@@ -48,16 +48,16 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   //   }
   // }
 
-void _viewResume() {
-  if (user?.resumeUrl != null && user!.resumeUrl!.isNotEmpty) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ResumeViewer(url: user!.resumeUrl!),
-      ),
-    );
-  }
-}
+// void _viewResume() {
+//   if (user?.resumeUrl != null && user!.resumeUrl!.isNotEmpty) {
+//     Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (context) => ResumeViewer(url: user!.resumeUrl!),
+//       ),
+//     );
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {
@@ -252,25 +252,25 @@ void _viewResume() {
             _buildSection(
               icon: Icons.description_outlined,
               title: "Resume",
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: _viewResume,
-                    icon: const Icon(Icons.picture_as_pdf_rounded),
-                    label: const Text(
-                      "View Resume",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              // children: [
+              //   SizedBox(
+              //     width: double.infinity,
+              //     child: FilledButton.icon(
+              //       onPressed: _viewResume,
+              //       icon: const Icon(Icons.picture_as_pdf_rounded),
+              //       label: const Text(
+              //         "View Resume",
+              //         style: TextStyle(fontSize: 16),
+              //       ),
+              //       style: FilledButton.styleFrom(
+              //         padding: const EdgeInsets.symmetric(vertical: 18),
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(16),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ],
             ),
 
           const SizedBox(height: 20),
