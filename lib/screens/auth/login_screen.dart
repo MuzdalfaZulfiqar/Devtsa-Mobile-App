@@ -24,19 +24,31 @@ class _LoginScreenState extends State<LoginScreen> {
     final isLoading = auth.loading;
 
     // If user suddenly becomes logged in while on this screen, redirect
+    // if (auth.isAuthenticated) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     if (auth.user?.onboardingCompleted == true) {
+    //       Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (_) => const DashboardScreen()),
+    //       );
+    //     } else {
+    //       Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+    //       );
+    //     }
+    //   });
+    // }
     if (auth.isAuthenticated) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (auth.user?.onboardingCompleted == true) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const DashboardScreen()),
-          );
-        } else {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-          );
-        }
-      });
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (auth.user?.onboardingCompleted == true) {
+      Navigator.of(context).pushReplacementNamed('/dashboard');
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+      );
     }
+  });
+}
+
 
     final primary = const Color(0xFF086972);
 
