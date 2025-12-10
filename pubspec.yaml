@@ -34,7 +34,8 @@ dependencies:
   shared_preferences: ^2.2.2
   provider: ^6.1.2
   webview_flutter: ^4.2.1
-
+  dio: ^5.9.0
+  path_provider: ^2.0.15
 
   
 
@@ -43,6 +44,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   url_launcher: ^6.3.2
   file_picker: ^10.3.7
+  syncfusion_flutter_pdfviewer: 31.2.18
 
 
   

@@ -73,6 +73,9 @@ class DevstaUser {
   // Admin / status
   final bool isBlocked;
 
+  final String bio;
+  final List<String> interests;
+
   DevstaUser({
     required this.id,
     required this.email,
@@ -97,6 +100,8 @@ class DevstaUser {
     this.latestQuizOutOf = 0,
     this.profileScore = 0.0,
     this.isBlocked = false,
+    this.bio = '', // new
+    this.interests = const [], // new
   });
 
   factory DevstaUser.fromJson(Map<String, dynamic> json) {
@@ -135,8 +140,65 @@ class DevstaUser {
       latestQuizOutOf: json['latestQuizOutOf'] as int? ?? 0,
       profileScore: (json['profileScore'] as num?)?.toDouble() ?? 0.0,
       isBlocked: json['isBlocked'] == true,
+       bio: json['bio']?.toString() ?? '', // new
+      interests: (json['interests'] as List?)?.map((e) => e.toString()).toList() ?? [], // new
+ 
     );
   }
 
-  DevstaUser? copyWith({required validatedSkills, required profileScore, required bool skillsValidated}) {}
+DevstaUser copyWith({
+  Map<String, double>? validatedSkills,
+  double? profileScore,
+  bool? skillsValidated,
+  String? name,
+  String? email,
+  String? phone,
+  String? experienceLevel,
+  String? primaryRole,
+  List<String>? topSkills,
+  bool? onboardingCompleted,
+  bool? githubConnected,
+  Map<String, dynamic>? githubProfile,
+  List<Map<String, dynamic>>? githubRepos,
+  Map<String, dynamic>? githubStats,
+  String? resumeUrl,
+  String? resumePublicId,
+  String? resumeFileType,
+  int? resumeFileSize,
+  bool? hasAttemptedQuiz,
+  int? latestQuizScore,
+  int? latestQuizOutOf,
+  bool? isBlocked,
+   String? bio,
+    List<String>? interests,
+}) {
+  return DevstaUser(
+    id: id, // usually id should never change
+    email: email ?? this.email,
+    name: name ?? this.name,
+    phone: phone ?? this.phone,
+    experienceLevel: experienceLevel ?? this.experienceLevel,
+    primaryRole: primaryRole ?? this.primaryRole,
+    topSkills: topSkills ?? this.topSkills,
+    onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+    githubConnected: githubConnected ?? this.githubConnected,
+    githubProfile: githubProfile ?? this.githubProfile,
+    githubRepos: githubRepos ?? this.githubRepos,
+    githubStats: githubStats ?? this.githubStats,
+    skillsValidated: skillsValidated ?? this.skillsValidated,
+    validatedSkills: validatedSkills ?? this.validatedSkills,
+    resumeUrl: resumeUrl ?? this.resumeUrl,
+    resumePublicId: resumePublicId ?? this.resumePublicId,
+    resumeFileType: resumeFileType ?? this.resumeFileType,
+    resumeFileSize: resumeFileSize ?? this.resumeFileSize,
+    hasAttemptedQuiz: hasAttemptedQuiz ?? this.hasAttemptedQuiz,
+    latestQuizScore: latestQuizScore ?? this.latestQuizScore,
+    latestQuizOutOf: latestQuizOutOf ?? this.latestQuizOutOf,
+    profileScore: profileScore ?? this.profileScore,
+    isBlocked: isBlocked ?? this.isBlocked,
+    bio: bio ?? this.bio,
+      interests: interests ?? this.interests,
+  );
+}
+
 }

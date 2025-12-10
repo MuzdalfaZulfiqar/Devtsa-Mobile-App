@@ -148,27 +148,29 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+Future<void> validateSkills() async {
+  if (_token == null) return;
+  _loading = true;
+  notifyListeners();
 
-  Future<void> validateSkills() async {
-    if (_token == null || _user == null) return;
-    _loading = true;
+  try {
+    // Call backend to validate skills
+    await _repo.validateSkills(_token!);
+
+    // Refetch the full user data
+    _user = await _repo.fetchCurrentUser(_token!);
+
+    // Optionally set a flag if you need to indicate validation happened
+    _user = _user!.copyWith(skillsValidated: true);
+
+  } catch (e) {
+    _error = e.toString();
+    rethrow;
+  } finally {
+    _loading = false;
     notifyListeners();
-
-    try {
-      final data = await _repo.validateSkills(_token!);
-      _user = _user!.copyWith(
-        validatedSkills: data['validated_skills'],
-        profileScore: data['profile_score'],
-        skillsValidated: true,
-      );
-    } catch (e) {
-      _error = e.toString();
-      rethrow;
-    } finally {
-      _loading = false;
-      notifyListeners();
-    }
   }
+}
 
   /// Login
   Future<void> login(String email, String password) async {

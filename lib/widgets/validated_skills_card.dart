@@ -151,17 +151,7 @@ class ValidatedSkillsCard extends StatelessWidget {
             style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
-          if (onValidate != null)
-            ElevatedButton(
-              onPressed: isValidating ? null : onValidate,
-              child: isValidating
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                    )
-                  : const Text("Re-run Validation"),
-            ),
+          
         ],
       ),
     );

@@ -35,6 +35,35 @@
 //     setState(() => showInfoModal = false);
 //   }
 
+//   void runValidation() async {
+//     final auth = Provider.of<AuthProvider>(context, listen: false);
+
+//     // Require at least 2 sources: GitHub connected, resume uploaded, or previously validated skills
+//     final sourcesCount = [
+//       auth.user?.githubConnected ?? false,
+//       (auth.user?.resumeUrl ?? '').isNotEmpty,
+//       auth.user?.skillsValidated ?? false,
+//     ].where((x) => x).length;
+
+//     if (sourcesCount < 2) {
+//       openInfo(
+//         "Add More Sources",
+//         "Please connect GitHub or upload your resume before running skill validation.",
+//       );
+//       return;
+//     }
+
+//     try {
+//       await auth.validateSkills();
+//       openInfo(
+//         "Skills Validated",
+//         "Your profile score and skills are updated.",
+//       );
+//     } catch (e) {
+//       openInfo("Validation Failed", e.toString());
+//     }
+//   }
+
 //   @override
 //   Widget build(BuildContext context) {
 //     final theme = Theme.of(context);
@@ -58,7 +87,7 @@
 //       );
 //     }
 
-//     final validatedSkillsList = user.validatedSkills?.keys.toList() ?? [];
+//     final validatedSkills = user.validatedSkills ?? {};
 
 //     final List<Map<String, dynamic>> todoCards = [
 //       if (!user.githubConnected)
@@ -77,10 +106,7 @@
 //         {
 //           "title": "Validate Skills",
 //           "subtitle": "Validate your skills to unlock achievements",
-//           "action": () => openInfo(
-//                 "Validate Skills",
-//                 "Skill validation process will be added soon.",
-//               ),
+//           "action": runValidation,
 //         },
 //     ];
 
@@ -117,6 +143,7 @@
 //               ),
 //               const SizedBox(height: 20),
 
+//               // TODO Cards
 //               if (todoCards.isNotEmpty)
 //                 Column(
 //                   children: todoCards.map((card) {
@@ -137,6 +164,7 @@
 
 //               const SizedBox(height: 24),
 
+//               // Achievements
 //               if (completedCards.isNotEmpty)
 //                 Column(
 //                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,10 +185,8 @@
 //                             title: card['title'],
 //                             subtitle: card['subtitle'],
 //                             isCompleted: true,
-//                             backgroundColor:
-//                                 theme.colorScheme.surfaceVariant,
-//                             titleColor:
-//                                 theme.colorScheme.onSurfaceVariant,
+//                             backgroundColor: theme.colorScheme.surfaceVariant,
+//                             titleColor: theme.colorScheme.onSurfaceVariant,
 //                             subtitleColor: theme.colorScheme.onSurfaceVariant
 //                                 .withOpacity(0.7),
 //                           ),
@@ -172,43 +198,92 @@
 
 //               const SizedBox(height: 24),
 
+//               // GitHub Modal (hidden version for example)
 //               if (user.githubConnected)
-//                 GitHubConnectModal(
-//                   open: false,
-//                   onClose: () {},
-//                 ),
+//                 GitHubConnectModal(open: false, onClose: () {}),
 
 //               const SizedBox(height: 24),
+//               // Top Skills (always show)
+//               if (user.topSkills != null && user.topSkills!.isNotEmpty)
+//                 Container(
+//                   width: double.infinity,
+//                   padding: const EdgeInsets.all(16),
+//                   decoration: BoxDecoration(
+//                     color: theme.colorScheme.surfaceVariant,
+//                     borderRadius: BorderRadius.circular(16),
+//                   ),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         "Top Skills",
+//                         style: theme.textTheme.titleMedium?.copyWith(
+//                           fontWeight: FontWeight.w600,
+//                           color: theme.colorScheme.onSurface,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 12),
+//                       Wrap(
+//                         spacing: 8,
+//                         runSpacing: 8,
+//                         children: user.topSkills!.map((skill) {
+//                           return Chip(
+//                             label: Text(skill),
+//                             backgroundColor:
+//                                 theme.colorScheme.secondaryContainer,
+//                             labelStyle: theme.textTheme.bodyMedium?.copyWith(
+//                               color: theme.colorScheme.onSecondaryContainer,
+//                             ),
+//                           );
+//                         }).toList(),
+//                       ),
+//                       const SizedBox(height: 12),
+//                     ],
+//                   ),
+//                 ),
 
-//               if (user.skillsValidated || validatedSkillsList.isNotEmpty)
-//                 ValidatedSkillsCard(skills: validatedSkillsList),
+//               // Validated Skills (only if user has validated skills or previous validation exists)
+//               if (user.skillsValidated || validatedSkills.isNotEmpty)
+//                 ValidatedSkillsCard(
+//                   validatedSkills: validatedSkills,
+//                   profileScore: user.profileScore ?? 0,
+//                   isValidating: authProvider.loading,
+//                   onValidate: runValidation,
+//                 ),
+
+//               // Validated Skills
+//               if (user.skillsValidated || validatedSkills.isNotEmpty)
+//                 ValidatedSkillsCard(
+//                   validatedSkills: validatedSkills,
+//                   profileScore: user.profileScore ?? 0,
+//                   isValidating: authProvider.loading,
+//                   onValidate: runValidation,
+//                 ),
 //             ],
 //           ),
 //         ),
 
-//       if (openResumeModal)
-//   ResumeUploadModal(
-//     open: true,
-//     onClose: () => setState(() => openResumeModal = false),
-//   ),
-
-// if (openGithubModal)
-//   GitHubConnectModal(
-//     open: true,
-//     onClose: () => setState(() => openGithubModal = false),
-//   ),
-
-//         if (showInfoModal)
-//           InfoModal(
-//             title: infoTitle,
-//             message: infoMessage,
-//             onClose: closeInfo,
+//         // Resume Modal
+//         if (openResumeModal)
+//           ResumeUploadModal(
+//             open: true,
+//             onClose: () => setState(() => openResumeModal = false),
 //           ),
+
+//         // GitHub Modal
+//         if (openGithubModal)
+//           GitHubConnectModal(
+//             open: true,
+//             onClose: () => setState(() => openGithubModal = false),
+//           ),
+
+//         // Info Modal
+//         if (showInfoModal)
+//           InfoModal(title: infoTitle, message: infoMessage, onClose: closeInfo),
 //       ],
 //     );
 //   }
 // }
-
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -217,7 +292,10 @@ import '../../widgets/dashboard_card.dart';
 import '../../widgets/github_connect_modal.dart';
 import '../../widgets/resume_upload_modal.dart';
 import '../../widgets/validated_skills_card.dart';
-import '../../widgets/info_modal.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+const String BACKEND_URL = "https://devsta-backend.onrender.com";
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -229,48 +307,23 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   bool openGithubModal = false;
   bool openResumeModal = false;
-  bool showInfoModal = false;
-  String infoTitle = '';
-  String infoMessage = '';
+  bool isValidating = false;
 
-  void openInfo(String title, String message) {
-    if (!mounted) return;
-    setState(() {
-      infoTitle = title;
-      infoMessage = message;
-      showInfoModal = true;
-    });
+Future<void> runValidation() async {
+  final auth = Provider.of<AuthProvider>(context, listen: false);
+
+  try {
+    setState(() => isValidating = true);
+
+    // Call the provider method to validate skills
+    await auth.validateSkills();
+
+  } catch (e) {
+    debugPrint("Validation error: $e");
+  } finally {
+    if (mounted) setState(() => isValidating = false);
   }
-
-  void closeInfo() {
-    if (!mounted) return;
-    setState(() => showInfoModal = false);
-  }
-
-  void runValidation() async {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
-
-    // Require at least 2 sources: GitHub connected, resume uploaded, or previously validated skills
-    final sourcesCount = [
-      auth.user?.githubConnected ?? false,
-      (auth.user?.resumeUrl ?? '').isNotEmpty,
-      auth.user?.skillsValidated ?? false,
-    ].where((x) => x).length;
-
-    if (sourcesCount < 2) {
-      openInfo(
-          "Add More Sources",
-          "Please connect GitHub or upload your resume before running skill validation.");
-      return;
-    }
-
-    try {
-      await auth.validateSkills();
-      openInfo("Skills Validated", "Your profile score and skills are updated.");
-    } catch (e) {
-      openInfo("Validation Failed", e.toString());
-    }
-  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -349,6 +402,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               const SizedBox(height: 20),
 
+              // Top Skills (always visible)
+              if (user.topSkills != null && user.topSkills!.isNotEmpty)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceVariant,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Top Skills",
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: user.topSkills!.map((skill) {
+                          return Chip(
+                            label: Text(skill),
+                            backgroundColor: theme.colorScheme.secondaryContainer,
+                            labelStyle: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSecondaryContainer),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
+                ),
+
               // TODO Cards
               if (todoCards.isNotEmpty)
                 Column(
@@ -404,20 +494,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               const SizedBox(height: 24),
 
-              // GitHub Modal (hidden version for example)
-              if (user.githubConnected)
-                GitHubConnectModal(open: false, onClose: () {}),
-
-              const SizedBox(height: 24),
-
-              // Validated Skills
-              if (user.skillsValidated || validatedSkills.isNotEmpty)
-                ValidatedSkillsCard(
-                  validatedSkills: validatedSkills,
-                  profileScore: user.profileScore ?? 0,
-                  isValidating: authProvider.loading,
-                  onValidate: runValidation,
-                ),
+              // Validated Skills Card
+              ValidatedSkillsCard(
+                validatedSkills: validatedSkills,
+                profileScore: user.profileScore ?? 0,
+                isValidating: isValidating,
+                onValidate: runValidation,
+              ),
             ],
           ),
         ),
@@ -434,14 +517,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           GitHubConnectModal(
             open: true,
             onClose: () => setState(() => openGithubModal = false),
-          ),
-
-        // Info Modal
-        if (showInfoModal)
-          InfoModal(
-            title: infoTitle,
-            message: infoMessage,
-            onClose: closeInfo,
           ),
       ],
     );

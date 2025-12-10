@@ -73,7 +73,7 @@ class AuthService {
 
    Future<Map<String, dynamic>> validateSkills(String token) async {
     final data = await _api.postJson(
-      '/api/users/validate-skills', // endpoint on your backend
+       '/api/users/profile/validate-skills',// endpoint on your backend
       token: token,
     );
 
