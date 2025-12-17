@@ -21,9 +21,6 @@ Route<dynamic> onGenerateRoute(RouteSettings s) {
     case '/signup':
       return MaterialPageRoute(builder: (_) => const OnboardingScreen());
 
-    // case '/dashboard':
-    //   return MaterialPageRoute(builder: (_) => const DashboardScreen());
-
     case '/dashboard':
   return MaterialPageRoute(builder: (_) => const MainScaffold());
 
