@@ -1,6 +1,8 @@
 // lib/screens/community/community_screen.dart
 import 'package:flutter/material.dart';
 
+import 'explore_screen.dart';
+import 'my_connections_screen.dart';
 /// Reusable scaffold for Community tabs
 /// You can reuse this later and just pass different widgets
 class CommunityTabsScaffold extends StatelessWidget {
@@ -51,15 +53,11 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommunityTabsScaffold(
-      explore: const Center(
-        child: Text('Explore – implementation coming soon'),
-      ),
+      explore: const ExploreScreen(),
       feed: const Center(
         child: Text('Feed – implementation coming soon'),
       ),
-      connections: const Center(
-        child: Text('My Connections – implementation coming soon'),
-      ),
+      connections: const MyConnectionsScreen(),
     );
   }
 }
