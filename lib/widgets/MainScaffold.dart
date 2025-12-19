@@ -26,7 +26,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     // Screens list must now be dynamic
     final List<Widget> screens = [
       const DashboardScreen(),
-      ProfileOverview(token: token), // ✅ Pass token
+      ProfileOverview(token: token), 
       const CommunityScreen(),
     ];
 

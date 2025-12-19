@@ -8,7 +8,11 @@ class CreatePostWidget extends StatefulWidget {
   final PostService postService;
   final void Function(Post newPost)? onPostCreated;
 
-  const CreatePostWidget({Key? key, required this.postService, this.onPostCreated}) : super(key: key);
+  const CreatePostWidget({
+    Key? key,
+    required this.postService,
+    this.onPostCreated,
+  }) : super(key: key);
 
   @override
   State<CreatePostWidget> createState() => _CreatePostWidgetState();
@@ -18,6 +22,14 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
   final TextEditingController _textController = TextEditingController();
   List<File> _mediaFiles = [];
   bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController.addListener(() {
+      setState(() {}); // triggers rebuild so Post button updates
+    });
+  }
 
   @override
   void dispose() {
@@ -35,9 +47,18 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
     setState(() {
       _mediaFiles.addAll(files);
     });
-    final totalSize = _mediaFiles.fold<int>(0, (sum, f) => sum + f.lengthSync());
+    final totalSize = _mediaFiles.fold<int>(
+      0,
+      (sum, f) => sum + f.lengthSync(),
+    );
     if (_mediaFiles.length >= 2 || totalSize > 15 * 1024 * 1024) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Uploading multiple/large files — posting may take a moment.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Uploading multiple/large files — posting may take a moment.',
+          ),
+        ),
+      );
     }
   }
 
@@ -51,10 +72,15 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
     final text = _textController.text.trim();
     if (text.isEmpty && _mediaFiles.isEmpty) return;
     setState(() => _loading = true);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Uploading your post… please wait.')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Uploading your post… please wait.')),
+    );
 
     try {
-      final res = await widget.postService.createPost(text: text, mediaFiles: _mediaFiles);
+      final res = await widget.postService.createPost(
+        text: text,
+        mediaFiles: _mediaFiles,
+      );
       final postJson = res['post'] ?? res;
       final newPost = Post.fromJson(postJson as Map<String, dynamic>);
       _textController.clear();
@@ -62,7 +88,9 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
       widget.onPostCreated?.call(newPost);
     } catch (e) {
       debugPrint('Create post failed: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to create post')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to create post')));
     } finally {
       setState(() => _loading = false);
     }
@@ -77,21 +105,28 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            Row(children: [
-              CircleAvatar(radius: 22), // replace with your DevstaAvatar
-              SizedBox(width: 10),
-              Expanded(
-                child: TextField(
-                  controller: _textController,
-                  minLines: 1,
-                  maxLines: 6,
-                  decoration: InputDecoration(
-                    hintText: 'Share something with the community...',
-                    border: InputBorder.none,
+            Row(
+              children: [
+                CircleAvatar(
+  radius: 22,
+  backgroundColor: Color(0xFF086972), // your teal color
+  child: Icon(Icons.person, color: Colors.white), // optional: white icon inside
+),
+ // replace with your DevstaAvatar
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _textController,
+                    minLines: 1,
+                    maxLines: 6,
+                    decoration: InputDecoration(
+                      hintText: 'Share something with the community...',
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
-              )
-            ]),
+              ],
+            ),
             if (_mediaFiles.isNotEmpty)
               Container(
                 height: 96,
@@ -104,21 +139,31 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                       children: [
                         GestureDetector(
                           onTap: () => showDialog(
-                              context: context,
-                              builder: (c) => Dialog(child: Image.file(f))),
+                            context: context,
+                            builder: (c) => Dialog(child: Image.file(f)),
+                          ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.file(f, width: 96, height: 96, fit: BoxFit.cover),
+                            child: Image.file(
+                              f,
+                              width: 96,
+                              height: 96,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         Positioned(
                           right: -6,
                           top: -6,
                           child: IconButton(
-                            icon: Icon(Icons.close, color: Colors.white, size: 18),
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 18,
+                            ),
                             onPressed: () => _removeMedia(i),
                           ),
-                        )
+                        ),
                       ],
                     );
                   },
@@ -130,15 +175,22 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(children: [
-                  IconButton(onPressed: _pickImages, icon: Icon(Icons.image)),
-                  // add other actions...
-                ]),
+                Row(
+                  children: [
+                    IconButton(onPressed: _pickImages, icon: Icon(Icons.image)),
+                    // add other actions...
+                  ],
+                ),
                 ElevatedButton(
-                  onPressed: _loading || (_textController.text.trim().isEmpty && _mediaFiles.isEmpty) ? null : _submit,
+                  onPressed:
+                      _loading ||
+                          (_textController.text.trim().isEmpty &&
+                              _mediaFiles.isEmpty)
+                      ? null
+                      : _submit,
                   child: _loading ? Text('Posting...') : Text('Post'),
                   style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                )
+                ),
               ],
             ),
           ],
