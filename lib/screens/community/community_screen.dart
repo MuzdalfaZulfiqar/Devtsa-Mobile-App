@@ -64,6 +64,8 @@ import '../screens/feed_screen.dart';
 import '../screens/feed_layout.dart';
 import '../services/post_service.dart';
 
+import 'explore_screen.dart';
+import 'my_connections_screen.dart';
 /// Reusable scaffold for Community tabs
 class CommunityTabsScaffold extends StatelessWidget {
   final Widget explore;
@@ -106,6 +108,7 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommunityTabsScaffold(
+<<<<<<< HEAD:lib/screens/community_screen.dart
       explore: const Center(
         child: Text('Explore – implementation coming soon'),
       ),
@@ -120,6 +123,13 @@ class CommunityScreen extends StatelessWidget {
       connections: const Center(
         child: Text('My Connections – implementation coming soon'),
       ),
+=======
+      explore: const ExploreScreen(),
+      feed: const Center(
+        child: Text('Feed – implementation coming soon'),
+      ),
+      connections: const MyConnectionsScreen(),
+>>>>>>> 0cff3409779e578cf195def90f4b2d08aadedb87:lib/screens/community/community_screen.dart
     );
   }
 }

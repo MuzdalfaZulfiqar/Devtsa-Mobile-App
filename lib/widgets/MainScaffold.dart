@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_providers.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import './profile_overview.dart';
-import '../screens/community_screen.dart';
+import '../screens/community/community_screen.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});

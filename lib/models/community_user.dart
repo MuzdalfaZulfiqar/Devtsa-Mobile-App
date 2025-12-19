@@ -2,50 +2,65 @@
 class CommunityUser {
   final String id;
   final String name;
-  final String? headline;
+  final String? primaryRole;
   final String? avatarUrl;
-  final List<String> skills;
-  final bool isConnected;
-  final bool requestPending;
+  final List<String> topSkills;
+
+  /// "none" | "pending_sent" | "pending_received" | "accepted" | "declined" | "cancelled"
+  final String connectionStatus;
+  final String? requestId;
+  final String? direction; // "outgoing" | "incoming"
 
   CommunityUser({
     required this.id,
     required this.name,
-    this.headline,
+    this.primaryRole,
     this.avatarUrl,
-    this.skills = const [],
-    this.isConnected = false,
-    this.requestPending = false,
+    this.topSkills = const [],
+    this.connectionStatus = 'none',
+    this.requestId,
+    this.direction,
   });
 
+  bool get isConnected => connectionStatus == 'accepted';
+  bool get isPendingSent => connectionStatus == 'pending_sent';
+  bool get isPendingReceived => connectionStatus == 'pending_received';
+
   factory CommunityUser.fromJson(Map<String, dynamic> json) {
-    // Adjust keys according to your backend response
+    final connection = (json['connection'] is Map)
+        ? (json['connection'] as Map<String, dynamic>)
+        : null;
+
     return CommunityUser(
-      id: json['_id']?.toString() ?? json['id'].toString(),
-      name: json['name'] ?? json['fullName'] ?? 'Unknown',
-      headline: json['headline'] ?? json['title'],
-      avatarUrl: json['avatarUrl'] ?? json['profileImage'],
-      skills: (json['skills'] as List<dynamic>?)
+      id: (json['_id'] ?? json['id'] ?? '').toString(),
+      name: (json['name'] ?? '').toString(),
+      primaryRole: json['primaryRole']?.toString(),
+      avatarUrl: json['avatarUrl']?.toString(),
+      topSkills: (json['topSkills'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
-      isConnected: json['isConnected'] == true,
-      requestPending: json['requestPending'] == true,
+      connectionStatus:
+          (connection?['connectionStatus'] as String?) ?? 'none',
+      requestId: connection?['requestId']?.toString(),
+      direction: connection?['direction']?.toString(),
     );
   }
 
   CommunityUser copyWith({
-    bool? isConnected,
-    bool? requestPending,
+    String? connectionStatus,
+    String? requestId,
+    String? direction,
   }) {
     return CommunityUser(
       id: id,
       name: name,
-      headline: headline,
+      primaryRole: primaryRole,
       avatarUrl: avatarUrl,
-      skills: skills,
-      isConnected: isConnected ?? this.isConnected,
-      requestPending: requestPending ?? this.requestPending,
+      topSkills: topSkills,
+      connectionStatus: connectionStatus ?? this.connectionStatus,
+      requestId: requestId ?? this.requestId,
+      direction: direction ?? this.direction,
     );
   }
 }
