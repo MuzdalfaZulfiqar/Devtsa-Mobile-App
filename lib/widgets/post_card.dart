@@ -297,7 +297,7 @@ class _PostCardState extends State<PostCard> {
                   child: Wrap(
                     spacing: 10,
                     children: [
-                      OutlinedButton.icon(onPressed: () {}, icon: const Icon(Icons.add_photo_alternate_outlined), label: const Text('Add Photo')),
+                      // OutlinedButton.icon(onPressed: () {}, icon: const Icon(Icons.add_photo_alternate_outlined), label: const Text('Add Photo')),
                       TextButton(onPressed: () => setState(() => isEditing = false), child: const Text('Cancel')),
                       FilledButton(onPressed: _saveEdit, child: const Text('Save')),
                     ],

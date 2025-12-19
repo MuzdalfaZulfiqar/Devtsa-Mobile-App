@@ -90,6 +90,8 @@
 //     return autoAccepted ? 'accepted' : 'pending_sent';
 //   }
 // }
+
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -106,7 +108,7 @@ class CommunityApi {
   }) async {
     // Make sure BackendConfig.baseUrl = 'https://devsta-backend.onrender.com/api'
     final uri = Uri.parse(
-      '${BackendConfig.baseUrl}/connections?page=$page&limit=$limit',
+      '${BackendConfig.baseUrl}/api/connections?page=$page&limit=$limit',
     );
 
     final res = await http.get(
@@ -137,7 +139,7 @@ class CommunityApi {
     String targetUserId,
   ) async {
     final uri = Uri.parse(
-      '${BackendConfig.baseUrl}/connections/requests',
+      '${BackendConfig.baseUrl}/api/connections/requests',
     );
 
     final res = await http.post(
@@ -172,7 +174,7 @@ class CommunityApi {
     String requestId,
   ) async {
     final uri = Uri.parse(
-      '${BackendConfig.baseUrl}/connections/requests/$requestId',
+      '${BackendConfig.baseUrl}/api/connections/requests/$requestId',
     );
 
     final res = await http.delete(

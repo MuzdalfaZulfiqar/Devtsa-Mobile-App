@@ -10,13 +10,10 @@ Route<dynamic> onGenerateRoute(RouteSettings s) {
       return MaterialPageRoute(builder: (_) => const SplashPage());
     case '/login':
       return MaterialPageRoute(builder: (_) => const LoginScreen());
-
     case '/signup':
       return MaterialPageRoute(builder: (_) => const OnboardingScreen());
-
     case '/dashboard':
       return MaterialPageRoute(builder: (_) => const MainScaffold());
-
     default:
       return MaterialPageRoute(builder: (_) => const SplashPage());
   }

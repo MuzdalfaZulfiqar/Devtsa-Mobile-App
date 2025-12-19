@@ -339,23 +339,22 @@ class _ConnectionUserCard extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              radius: 22,
-              backgroundImage:
-                  (user.avatarUrl != null && user.avatarUrl!.isNotEmpty)
-                      ? NetworkImage(user.avatarUrl!)
-                      : null,
-              child: (user.avatarUrl == null ||
-                      user.avatarUrl!.isEmpty)
-                  ? Text(
-                      user.name.isNotEmpty
-                          ? user.name[0].toUpperCase()
-                          : '?',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )
-                  : null,
-            ),
+  radius: 22,
+  backgroundColor: Colors.teal, // <- change here
+  backgroundImage: (user.avatarUrl != null && user.avatarUrl!.isNotEmpty)
+      ? NetworkImage(user.avatarUrl!)
+      : null,
+  child: (user.avatarUrl == null || user.avatarUrl!.isEmpty)
+      ? Text(
+          user.name.isNotEmpty ? user.name[0].toUpperCase() : '?',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: Colors.white, // good contrast with teal
+          ),
+        )
+      : null,
+),
+
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -382,37 +381,31 @@ class _ConnectionUserCard extends StatelessWidget {
                     ),
                   if (user.topSkills.isNotEmpty) ...[
                     const SizedBox(height: 4),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: -4,
-                      children: user.topSkills
-                          .take(3)
-                          .map(
-                            (s) => Chip(
-                              label: Text(
-                                s,
-                                style: theme.textTheme.labelSmall
-                                    ?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              padding: EdgeInsets.zero,
-                              visualDensity:
-                                  VisualDensity.compact,
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize
-                                      .shrinkWrap,
-                              backgroundColor:
-                                  theme.colorScheme.primary
-                                      .withOpacity(0.08),
-                              side: BorderSide(
-                                color: theme.colorScheme.primary
-                                    .withOpacity(0.3),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
+                     Wrap(
+    spacing: 8, // more horizontal space between chips
+    runSpacing: 4, // vertical space between lines
+    children: user.topSkills
+        .take(3)
+        .map(
+          (s) => Chip(
+            label: Text(
+              s,
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w500,
+                fontSize: 12, // smaller font
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            visualDensity: VisualDensity.compact,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
+            side: BorderSide(
+              color: theme.colorScheme.primary.withOpacity(0.3),
+            ),
+          ),
+        )
+        .toList(),
+  ),
                   ],
                 ],
               ),

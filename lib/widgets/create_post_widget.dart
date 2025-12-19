@@ -173,26 +173,21 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
               ),
             SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(onPressed: _pickImages, icon: Icon(Icons.image)),
-                    // add other actions...
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed:
-                      _loading ||
-                          (_textController.text.trim().isEmpty &&
-                              _mediaFiles.isEmpty)
-                      ? null
-                      : _submit,
-                  child: _loading ? Text('Posting...') : Text('Post'),
-                  style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                ),
-              ],
-            ),
+  mainAxisAlignment: MainAxisAlignment.end,
+  children: [
+    ElevatedButton(
+      onPressed:
+          _loading ||
+                  (_textController.text.trim().isEmpty &&
+                      _mediaFiles.isEmpty)
+              ? null
+              : _submit,
+      child: _loading ? const Text('Posting...') : const Text('Post'),
+      style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
+    ),
+  ],
+),
+
           ],
         ),
       ),

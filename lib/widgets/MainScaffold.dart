@@ -30,7 +30,7 @@ class _MainScaffoldState extends State<MainScaffold> {
       const CommunityScreen(),
     ];
 
-    final List<String> titles = ["Dashboard", "Profile", "Resume", "Community"];
+    final List<String> titles = ["Dashboard", "Profile", "Community"];
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,

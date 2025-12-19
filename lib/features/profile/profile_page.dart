@@ -122,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
 
-          sectionTitle('Resume'),
+          // sectionTitle('Resume'),
           Row(
             children: [
               Expanded(

@@ -20,7 +20,9 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void initState() {
     super.initState();
-    _postService = PostService(backendUrl: 'https://devsta-backend.onrender.com'); 
+    _postService = PostService(
+      backendUrl: 'https://devsta-backend.onrender.com',
+    );
     _futurePosts = _loadPosts();
   }
 
@@ -37,15 +39,14 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-     final auth = Provider.of<AuthProvider>(context);
+    final auth = Provider.of<AuthProvider>(context);
     final currentUserId = auth.user?.id ?? '';
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: CreatePostWidget(
-            postService: _postService,    // ← REQUIRED
+            postService: _postService, // ← REQUIRED
             onPostCreated: (newPost) {
               _refreshPosts();
             },
@@ -76,14 +77,13 @@ class _FeedScreenState extends State<FeedScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
-                   return PostCard(
-  post: posts[index],
-  postService: _postService,
-  currentUserId: currentUserId, // ← ADDED
-  onDelete: (id) => _refreshPosts(),
-  onEdit: (updated) => _refreshPosts(),
-);
-
+                    return PostCard(
+                      post: posts[index],
+                      postService: _postService,
+                      currentUserId: currentUserId, // ← ADDED
+                      onDelete: (id) => _refreshPosts(),
+                      onEdit: (updated) => _refreshPosts(),
+                    );
                   },
                 ),
               );
